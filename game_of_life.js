@@ -10,6 +10,8 @@ let grid;
 let rows;
 let cols;
 let resolution = 10;
+let entropy = 0;
+let variable = [];
 
 function setup() {
   createCanvas(600, 400);
@@ -19,8 +21,12 @@ function setup() {
   for(let i = 0; i < cols; i++){
     for(let j = 0; j < rows; j++){
       grid[i][j] = floor(random(2));
+      if (grid[i][j] == 1){
+        entropy += 1;
+      }
     }
   }
+  variable.push(entropy)
 }
 
 function draw() {
@@ -56,17 +62,43 @@ function draw() {
         
         if (state == 0 && neightbours == 3){
           next[i][j] = 1;
+          entropy += 1;
+          variable.push(entropy);
         }
         else if (state == 1 && (neightbours < 2 || neightbours > 3)){
           next[i][j] = 0;
+          entropy -= 1;
+          variable.push(entropy);
         }
         else {
           next[i][j] = state;
+          entropy += 0;
+          variable.push(entropy);
         }
+      // if (next[i][j] == 1){
+      //   entropy += 1
+      //   variable.push(entropy)
       // }
+      // else if (next[i][j] == 0){
+      //   entropy -= 1
+      //   variable.push(entropy)
+      // }
+      // }
+      //console.log(entropy)
     }
   }
+  
   grid = next;
+  // if (variable[variable.length-1] == variable[variable.length-5000-3]  && variable[variable.length-1] == variable[variable.length-10000-3]){
+  //   noLoop()
+  //   console.log(variable)
+  //}
+
+}
+
+function mouseClicked(){
+  noLoop();
+  console.log(variable);
 }
 function countNeighbors(grid, x, y){
   let sum = 0;
